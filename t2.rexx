@@ -7,26 +7,22 @@
 
 /* display the test results */
 
-if areWeMocking then
-  return assertion
-else do
-  say divider
-  say contextdesc
-  say spacer
+say divider
+say contextdesc
+say spacer
 
-  do i = 1 to checkresult.0
-    say checkresult.i
-  end    
-
-  say spacer
-
-  text = counts()
-  do i = 1 to text.0
-    say text.i
-  end
-
-  say divider
-
-  exit
+do i = 1 to checkresult.0
+  say checkresult.i
 end
+
+say spacer
+
+text = counts()
+do i = 1 to text.0
+  say text.i
+end
+
+say divider
+
+exit
 
