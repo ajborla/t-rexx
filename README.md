@@ -77,6 +77,13 @@ Sample JCL below, originally sourced from [Microfocus Visual COBOL](https://www.
 //SYSTSIN   DD DUMMY
 //
 ```
+## Motivation
+In late 2022, I accepted the challenge of implementing a Rexx track on the learn-to-program platform, [Exercism](https://exercism.org/). A core component of this endeavour is a suitable unit test framework.
+
+I initally opted for a custom solution because requirements were for a lightweight framework with minimal functionality. However, I chanced upon [Lars Hansen's](https://github.com/oakmount66/t-rexx) fork of _t-rexx_, and thought I could modify that project to meet requirements.
+
+## Acknowledgements
+I would like to acknowldege [Dave Nicolette](https://github.com/neopragma/t-rexx) for initiating the _t-rexx_ project, and the sterling work [Lars Hansen](https://github.com/oakmount66/t-rexx) has done in extending the framework's functionality by adding  mocking support.
 
 ## Change history
 * 0.0.1 initial version by Dave Nicolette
@@ -86,7 +93,7 @@ Sample JCL below, originally sourced from [Microfocus Visual COBOL](https://www.
   - check() function expanded to handle both calls to functions and procedures
   - check() function expanded to compare named varables instead of only return values
   - check() function expanded also to handle =, <, >, <>, ^= >= and <=
-  - call to expect() funktion moved from test script to check() function in t3.rexx
+  - call to expect() function moved from test script to check() function in t3.rexx
   - a lot more samples added.
 * 0.0.3 (not tested on z/OS nor Windows)
   - mock() function added
