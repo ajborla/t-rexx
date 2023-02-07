@@ -17,3 +17,4 @@ rem ----------------------------------------------------------------------------
 
 copy/v t1.rexx+%1.rexx+t2.rexx+%2.rexx+t3.rexx t.rexx > NUL:
 rexx t.rexx
+exit/b %errorlevel%
