@@ -24,5 +24,5 @@ end
 
 say divider
 
-exit
+exit (count - passed)
 
