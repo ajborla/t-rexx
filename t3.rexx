@@ -8,7 +8,7 @@
 /* functions for the test framework */
 
 init:
-  parse source operatingSystem command programName
+  parse upper arg tapOutput
   checkNumber = 0
   count = 0
   passed = 0
@@ -39,15 +39,22 @@ check:
 
   count = count + 1
   checkresult.0 = count
-  checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
+
+  if tapOutput == 'TAP' then
+    checkresult.count = assertion count '-' description
+  else do
+    checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
+  end
+
 return ''
 
 expect:
   parse arg actual, variableName, op, expected
   if variableName <> '' then
     actualValue = value(variableName)
-  else
+  else do
     actualValue = actual
+  end
 
   select
     when op == 'to be' | op == '=' then
@@ -82,11 +89,19 @@ report:
   select
     when res == 0 then do
       failed = failed + 1
-      lineout = '*** FAILED: Expected "' || expected || '" but got "' || actual || '"'
+      if tapOutput == 'TAP' then
+        lineout = 'not ok'
+      else do
+        lineout = '*** FAILED: Expected "' || expected || '" but got "' || actual || '"'
+      end
     end
     when res == 1 then do
       passed = passed + 1
-      lineout = '    PASSED: Expected "' || expected || '" and got "' || actual || '"'
+      if tapOutput == 'TAP' then
+        lineout = 'ok'
+      else do
+        lineout = '    PASSED: Expected "' || expected || '" and got "' || actual || '"'
+      end
     end
   end
 return lineout

@@ -5,7 +5,7 @@
    this file is t1.rexx
 */
 
-call init
+call init(ARG(1))
 
 /* Test script below *********************************************************/
 

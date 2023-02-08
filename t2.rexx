@@ -5,24 +5,32 @@
    this file is t2.rexx
 */
 
-/* display the test results */
+/* display the test results, either in TAP format, or REPORT format */
 
-say divider
-say contextdesc
-say spacer
+if tapOutput == 'TAP' then do
+  say '1..'||count
 
-do i = 1 to checkresult.0
-  say checkresult.i
+  do i = 1 to checkresult.0
+    say checkresult.i
+  end
+end ; else do
+  say divider
+  say contextdesc
+  say spacer
+
+  do i = 1 to checkresult.0
+    say checkresult.i
+  end
+
+  say spacer
+
+  text = counts()
+  do i = 1 to text.0
+    say text.i
+  end
+
+  say divider
 end
-
-say spacer
-
-text = counts()
-do i = 1 to text.0
-  say text.i
-end
-
-say divider
 
 exit (count - passed)
 
