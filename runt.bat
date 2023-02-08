@@ -16,5 +16,5 @@ rem 03 Apr 2015
 rem ----------------------------------------------------------------------------
 
 copy/v t1.rexx+%1.rexx+t2.rexx+%2.rexx+t3.rexx t.rexx > NUL:
-rexx t.rexx
+rexx t.rexx TAP
 exit/b %errorlevel%

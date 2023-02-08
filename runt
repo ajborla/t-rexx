@@ -16,4 +16,4 @@
 #----------------------------------------------------------------------------
 
 cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > t.rexx
-rexx t.rexx
+rexx t.rexx TAP
