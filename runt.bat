@@ -30,6 +30,7 @@
 :: 2023-02-10      0.3.0     Anthony J. Borla    Add script help and usage.
 :: 2023-02-10      0.3.1     Anthony J. Borla    Prevent environment pollution.
 :: 2023-02-10      0.3.2     Anthony J. Borla    Fix hard-coded test runner.
+:: 2023-02-10      0.4.0     Anthony J. Borla    Add KEEP and TAP options.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -44,6 +45,12 @@
     if /i "%1"=="%%i" goto :help
   )
 
+:chkoptions
+  if /i "%2"=="--keep" set KEEP=KEEP&& shift
+  if /i "%2"=="--tap-output" set TAP=TAP&& shift
+  if /i "%1"=="--keep" set KEEP=KEEP&& shift
+  if /i "%1"=="--tap-output" set TAP=TAP&& shift
+
 :chkarg
   if "%2"=="" goto :argErr
   if "%1"=="" goto :argErr
@@ -55,8 +62,9 @@
 
 :main
   copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
-  rexx %RUNNER% TAP
+  rexx %RUNNER% %TAP%
   set RC=%errorlevel%
+  if not "%KEEP%"=="KEEP" del /q %RUNNER% 2> NUL:
   goto :exit
 
 :help
