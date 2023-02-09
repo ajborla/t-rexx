@@ -27,10 +27,19 @@
 :: 2023-02-09      0.0.5     Anthony J. Borla    Revised header content.
 :: 2023-02-10      0.1.0     Anthony J. Borla    Add argument checks, %RC%.
 :: 2023-02-10      0.2.0     Anthony J. Borla    Add file existence checks.
+:: 2023-02-10      0.3.0     Anthony J. Borla    Add script help and usage.
 :: ----------------------------------------------------------------------------
 
 :init
   set RC=1
+
+:chkusage
+  :: Help requested ?
+  if /i "%1"=="/?" goto :help
+  if /i "%1"=="-?" goto :help
+  for %%i in (-h --help /h /help) do (
+    if /i "%1"=="%%i" goto :help
+  )
 
 :chkarg
   if "%2"=="" goto :argErr
@@ -47,16 +56,30 @@
   set RC=%errorlevel%
   goto :exit
 
+:help
+  set RC=0
+  echo.
+  echo Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.
+  echo * %%1 is the test script name, %%2 is the source file (code under test), both sans .rexx extension
+  echo * Return code zero on test run success; positive-valued return code equals number of failed tests
+  echo * Expects 'rexx' interpreter to be available
+  echo * Expects t-rexx component files, t1.rexx, t2.rexx, and t3.rexx, co-resident with test and source
+  goto :usage
+
 :argErr
   echo Error: Incorrect arguments
-  goto :exit
+  goto :usage
 
 :noSourceFileErr
   echo Error: Missing source file - "%2.rexx"
-  goto :exit
+  goto :usage
 
 :noTestFileErr
   echo Error: Missing test script - "%1.rexx"
+
+:usage
+  echo.
+  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| test source
 
 :exit
   exit/b %RC%
