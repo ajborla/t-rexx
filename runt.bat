@@ -1,4 +1,4 @@
-@echo off
+@echo off & setlocal
 
 :: ----------------------------------------------------------------------------
 :: Script runner for t.rexx
@@ -28,6 +28,7 @@
 :: 2023-02-10      0.1.0     Anthony J. Borla    Add argument checks, %RC%.
 :: 2023-02-10      0.2.0     Anthony J. Borla    Add file existence checks.
 :: 2023-02-10      0.3.0     Anthony J. Borla    Add script help and usage.
+:: 2023-02-10      0.3.1     Anthony J. Borla    Prevent environment pollution.
 :: ----------------------------------------------------------------------------
 
 :init
