@@ -29,9 +29,11 @@
 :: 2023-02-10      0.2.0     Anthony J. Borla    Add file existence checks.
 :: 2023-02-10      0.3.0     Anthony J. Borla    Add script help and usage.
 :: 2023-02-10      0.3.1     Anthony J. Borla    Prevent environment pollution.
+:: 2023-02-10      0.3.2     Anthony J. Borla    Fix hard-coded test runner.
 :: ----------------------------------------------------------------------------
 
 :init
+  set RUNNER=t.rexx
   set RC=1
 
 :chkusage
@@ -52,8 +54,8 @@
   if not exist "%1.rexx" goto :noTestFileErr
 
 :main
-  copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx t.rexx > NUL:
-  rexx t.rexx TAP
+  copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
+  rexx %RUNNER% TAP
   set RC=%errorlevel%
   goto :exit
 
