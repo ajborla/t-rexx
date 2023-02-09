@@ -25,9 +25,25 @@
 :: 2023-02-07      0.0.3     Anthony J. Borla    Return return code.
 :: 2023-02-08      0.0.4     Anthony J. Borla    Pass TAP option to runner.
 :: 2023-02-09      0.0.5     Anthony J. Borla    Revised header content.
+:: 2023-02-10      0.1.0     Anthony J. Borla    Add argument checks, %RC%.
 :: ----------------------------------------------------------------------------
 
-copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx t.rexx > NUL:
-rexx t.rexx TAP
-exit/b %errorlevel%
+:init
+  set RC=1
+
+:chkarg
+  if "%2"=="" goto :argErr
+  if "%1"=="" goto :argErr
+
+:main
+  copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx t.rexx > NUL:
+  rexx t.rexx TAP
+  set RC=%errorlevel%
+  goto :exit
+
+:argErr
+  echo Error: Incorrect arguments
+
+:exit
+  exit/b %RC%
 
