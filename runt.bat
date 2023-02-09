@@ -26,6 +26,7 @@
 :: 2023-02-08      0.0.4     Anthony J. Borla    Pass TAP option to runner.
 :: 2023-02-09      0.0.5     Anthony J. Borla    Revised header content.
 :: 2023-02-10      0.1.0     Anthony J. Borla    Add argument checks, %RC%.
+:: 2023-02-10      0.2.0     Anthony J. Borla    Add file existence checks.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -35,6 +36,11 @@
   if "%2"=="" goto :argErr
   if "%1"=="" goto :argErr
 
+:chkfile
+  :: Do source and test script files exist ?
+  if not exist "%2.rexx" goto :noSourceFileErr
+  if not exist "%1.rexx" goto :noTestFileErr
+
 :main
   copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx t.rexx > NUL:
   rexx t.rexx TAP
@@ -43,6 +49,14 @@
 
 :argErr
   echo Error: Incorrect arguments
+  goto :exit
+
+:noSourceFileErr
+  echo Error: Missing source file - "%2.rexx"
+  goto :exit
+
+:noTestFileErr
+  echo Error: Missing test script - "%1.rexx"
 
 :exit
   exit/b %RC%
