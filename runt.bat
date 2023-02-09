@@ -31,6 +31,7 @@
 :: 2023-02-10      0.3.1     Anthony J. Borla    Prevent environment pollution.
 :: 2023-02-10      0.3.2     Anthony J. Borla    Fix hard-coded test runner.
 :: 2023-02-10      0.4.0     Anthony J. Borla    Add KEEP and TAP options.
+:: 2023-02-10      0.4.1     Anthony J. Borla    Revise commentary and help.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -61,9 +62,18 @@
   if not exist "%1.rexx" goto :noTestFileErr
 
 :main
+  :: Assemble test runner from components and supplied files
   copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
+
+  :: Execute test runner with output option
+  :: - %TAP%==TAP -> TAP output
+  :: - %TAP%==""  -> REPORT output
   rexx %RUNNER% %TAP%
+
+  :: Ensure test runner return code passed back to command-line
   set RC=%errorlevel%
+
+  :: Unless KEEP option is set, delete the test runner
   if not "%KEEP%"=="KEEP" del /q %RUNNER% 2> NUL:
   goto :exit
 
@@ -72,6 +82,8 @@
   echo.
   echo Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.
   echo * %%1 is the test script name, %%2 is the source file (code under test), both sans .rexx extension
+  echo * --tap-output option generates TAP-compliant output; default is verbose report style
+  echo * --keep option ensures the generated test runner is not deleted
   echo * Return code zero on test run success; positive-valued return code equals number of failed tests
   echo * Expects 'rexx' interpreter to be available
   echo * Expects t-rexx component files, t1.rexx, t2.rexx, and t3.rexx, co-resident with test and source
@@ -90,7 +102,7 @@
 
 :usage
   echo.
-  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| test source
+  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| [--keep] [--tap-output] test source
 
 :exit
   exit/b %RC%
