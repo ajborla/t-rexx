@@ -26,6 +26,7 @@
 # 2023-02-09      0.0.4     Anthony J. Borla    Revised header content.
 # 2023-02-10      0.0.5     Anthony J. Borla    Fix hard-coded test runner.
 # 2023-02-10      0.1.0     Anthony J. Borla    Port help, and usage functions.
+# 2023-02-10      0.2.0     Anthony J. Borla    Add argument and file checks.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -56,6 +57,16 @@ error() {
 }
 
 # ---- Entry point
+
+# Was help requested ?
+[ "${1}" == "--help" -o "${1}" == "-h" ] && { help ; usage ; exit 0 ; }
+
+# Expecting two positional parameters; bail if not supplied
+[ "$#" -ne "2" ] && error 'Incorrect arguments'
+
+# Expecting each positional parameter to be a Rexx filename
+[ -f "${1}.rexx" ] || error "Missing test script - ${1}.rexx"
+[ -f "${2}.rexx" ] || error "Missing source file - ${2}.rexx"
 
 cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}"
 rexx "${RUNNER}" TAP
