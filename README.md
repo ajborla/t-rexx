@@ -22,6 +22,22 @@ The bash script ```runt``` performs the concatenation and executes the resulting
 ./runt calc-check calc
 ```
 
+If TAP-compliant output is required, invoke as follows:
+
+```shell
+./runt --tap-output calc-check calc
+```
+
+Test run return code is available to launch script, so may also use in automated scenarios:
+
+```shell
+./runt --tap-output "${tester}" "${cut}" 2>&1 >/dev/null \
+    && { ... do success stuff ... } \
+    || { ... do failure stuff ... }
+```
+
+Note that the assembled Rexx test runner (default name: `t.rexx`) is automatically deleted at the end of each test run, but may be kept for debugging purposes by using the `--keep` option.
+
 ## Running tests with Windows batch
 
 The batch file ```runt.bat``` performs the concatenation and executes the resulting file. For example, to run the 'calc' example provided in this repo, run the script as follows:
@@ -29,6 +45,22 @@ The batch file ```runt.bat``` performs the concatenation and executes the result
 ```shell
 runt calc-check calc
 ```
+
+If TAP-compliant output is required, invoke as follows:
+
+```shell
+runt --tap-output calc-check calc
+```
+
+Test run return code is available to launch script, so may also use in automated scenarios:
+
+```shell
+runt --tap-output "%TESTER%" "%CUT%" 2> NUL: > NUL:
+if not errorlevel 0 goto :failure
+goto :success
+```
+
+Note that the assembled Rexx test runner (default name: `t.rexx`) is automatically deleted at the end of each test run, but may be kept for debugging purposes by using the `--keep` option.
 
 ## Writing your own test
 
@@ -103,3 +135,7 @@ I would like to acknowldege [Dave Nicolette](https://github.com/neopragma/t-rexx
   - result from program with mocks collected and printed at the end of the run
 * 0.0.5 (not tested on z/OS)
   - mocking functionality removed
+* 0.0.6 (not tested on z/OS)
+  - test runner caller receives return code indicating test run success / failure
+  - test results now alternatively reported in TAP-compliant format
+  - `runt.bat` and `runt` launch scripts expanded and hardened
