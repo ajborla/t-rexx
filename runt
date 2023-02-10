@@ -25,11 +25,35 @@
 # 2023-02-08      0.0.3     Anthony J. Borla    Pass TAP option to runner.
 # 2023-02-09      0.0.4     Anthony J. Borla    Revised header content.
 # 2023-02-10      0.0.5     Anthony J. Borla    Fix hard-coded test runner.
+# 2023-02-10      0.1.0     Anthony J. Borla    Port help, and usage functions.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
 
 RUNNER="t.rexx"
+
+# ---- Functions
+
+usage() {
+    echo "Usage: ${0} [-h | --help] | [--keep] [--tap-output] test source"
+}
+
+help() {
+    echo 'Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.'
+    echo ' * ${1} is the test script name, ${2} is the source file (code under test), both sans .rexx extension'
+    echo ' * --tap-output option generates TAP-compliant output; default is verbose report style'
+    echo ' * --keep option ensures the generated test runner is not deleted'
+    echo ' * Return code zero on test run success; positive-valued return code equals number of failed tests'
+    echo ' * Expects "rexx" interpreter to be available'
+    echo ' * Expects t-rexx component files, t1.rexx, t2.rexx, and t3.rexx, co-resident with test and source'
+    echo
+}
+
+error() {
+    >&2 echo "Error: ${1}"
+    >&2 usage
+    exit 1
+}
 
 # ---- Entry point
 
