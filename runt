@@ -29,6 +29,7 @@
 # 2023-02-10      0.2.0     Anthony J. Borla    Add argument and file checks.
 # 2023-02-10      0.3.0     Anthony J. Borla    Add TAP and KEEP options.
 # 2023-02-10      0.4.0     Anthony J. Borla    Activate KEEP functionality.
+# 2023-02-10      0.4.1     Anthony J. Borla    Revised commentary.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -79,7 +80,8 @@ done
 [ -f "${1}.rexx" ] || error "Missing test script - ${1}.rexx"
 [ -f "${2}.rexx" ] || error "Missing source file - ${2}.rexx"
 
-cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}"
+# Assemble test runner from components and supplied files
+cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null
 
 # Execute test runner with output option
 # - "${TAP}"=="TAP" -> TAP output
