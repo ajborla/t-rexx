@@ -27,6 +27,7 @@
 # 2023-02-10      0.0.5     Anthony J. Borla    Fix hard-coded test runner.
 # 2023-02-10      0.1.0     Anthony J. Borla    Port help, and usage functions.
 # 2023-02-10      0.2.0     Anthony J. Borla    Add argument and file checks.
+# 2023-02-10      0.3.0     Anthony J. Borla    Add TAP and KEEP options.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -61,6 +62,15 @@ error() {
 # Was help requested ?
 [ "${1}" == "--help" -o "${1}" == "-h" ] && { help ; usage ; exit 0 ; }
 
+# Otherwise check for option parameters
+while (( "$#" )) ; do
+    case "${1}" in
+        --keep)       KEEP=KEEP ; shift ;;
+        --tap-output) TAP=TAP ; shift ;;
+        *) break ;;
+    esac
+done
+
 # Expecting two positional parameters; bail if not supplied
 [ "$#" -ne "2" ] && error 'Incorrect arguments'
 
@@ -69,5 +79,9 @@ error() {
 [ -f "${2}.rexx" ] || error "Missing source file - ${2}.rexx"
 
 cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}"
-rexx "${RUNNER}" TAP
+
+# Execute test runner with output option
+# - "${TAP}"=="TAP" -> TAP output
+# - "${TAP}"==""    -> REPORT output
+rexx "${RUNNER}" "${TAP}"
 
