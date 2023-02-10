@@ -39,8 +39,21 @@ function Get-Script-Location
 }
 
 Set-Variable -Name ScriptLocation (Get-Script-Location) -Option Private
-Set-Variable -Name TestScriptNamePath (-join ($ScriptLocation, "\", $TestScriptName, ".rexx")) -Option Private
-Set-Variable -Name SourceFileNamePath (-join ($ScriptLocation, "\", $SourceFileName, ".rexx")) -Option Private
+Set-Variable -Name T1RexxPath (-join ($ScriptLocation, "\", "t1.rexx")) -Option Private
+Set-Variable -Name T2RexxPath (-join ($ScriptLocation, "\", "t2.rexx")) -Option Private
+Set-Variable -Name T3RexxPath (-join ($ScriptLocation, "\", "t3.rexx")) -Option Private
+
+# Ensure all test framework Rexx source files co-located with current script
+foreach ($PathName in @($T1RexxPath,$T2RexxPath,$T3RexxPath)) {
+    if (-not (Test-Path -Path $PathName -Type Leaf)) {
+        throw [System.IO.FileNotFoundException] "Error: Missing test suite component - $PathName"
+    }
+}
+
+# Assume target location is the current directory (present working directory or PWD)
+Set-Variable -Name TargetLocation (Get-Location) -Option Private
+Set-Variable -Name TestScriptNamePath (-join ($TargetLocation, "\", $TestScriptName, ".rexx")) -Option Private
+Set-Variable -Name SourceFileNamePath (-join ($TargetLocation, "\", $SourceFileName, ".rexx")) -Option Private
 
 # Ensure both test script and source file exist
 if (-not (Test-Path -Path $TestScriptNamePath -Type Leaf)) {
