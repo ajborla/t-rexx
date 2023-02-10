@@ -12,6 +12,14 @@
 
 [CmdletBinding()]
 param (
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false)]
+    [switch]
+    $Keep,
+
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false)]
+    [switch]
+    $TAPOutput,
+
     [Parameter(Mandatory = $true, ValueFromPipeline = $false)]
     [ValidateNotNullOrEmpty()]
     [String]
