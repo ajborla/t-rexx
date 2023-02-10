@@ -12,12 +12,12 @@
 
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true, ValueFromPipeline = $false)]
     [ValidateNotNullOrEmpty()]
     [String]
     $TestScriptName,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true, ValueFromPipeline = $false)]
     [ValidateNotNullOrEmpty()]
     [String]
     $SourceFileName
