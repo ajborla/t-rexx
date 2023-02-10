@@ -24,8 +24,15 @@
 # 2023-02-07      0.0.2     Anthony J. Borla    Return return code.
 # 2023-02-08      0.0.3     Anthony J. Borla    Pass TAP option to runner.
 # 2023-02-09      0.0.4     Anthony J. Borla    Revised header content.
+# 2023-02-10      0.0.5     Anthony J. Borla    Fix hard-coded test runner.
 # -----------------------------------------------------------------------------
 
-cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > t.rexx
-rexx t.rexx TAP
+# ---- Constants
+
+RUNNER="t.rexx"
+
+# ---- Entry point
+
+cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}"
+rexx "${RUNNER}" TAP
 
