@@ -28,6 +28,7 @@
 # 2023-02-10      0.1.0     Anthony J. Borla    Port help, and usage functions.
 # 2023-02-10      0.2.0     Anthony J. Borla    Add argument and file checks.
 # 2023-02-10      0.3.0     Anthony J. Borla    Add TAP and KEEP options.
+# 2023-02-10      0.4.0     Anthony J. Borla    Activate KEEP functionality.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -84,4 +85,13 @@ cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}"
 # - "${TAP}"=="TAP" -> TAP output
 # - "${TAP}"==""    -> REPORT output
 rexx "${RUNNER}" "${TAP}"
+
+# Ensure test runner return code passed back to command-line
+RC="$?"
+
+# Unless KEEP option is set, delete the test runner
+[ "${KEEP}" != "KEEP" ] && rm -fr "${RUNNER}" 2>&1 >/dev/null
+
+# Return code from test runner
+exit "${RC}"
 
