@@ -31,6 +31,21 @@ param (
     $SourceFileName
 )
 
+#
+# Sourced: https://stackoverflow.com/questions/9738535/powershell-test-for-noninteractive-mode
+#
+function IsNonInteractiveShell {
+    # Test each Arg for match of abbreviated '-NonInteractive' command.
+    $NonInteractive = [Environment]::GetCommandLineArgs() | Where-Object{ $_ -like '-NonI*' }
+
+    if ([Environment]::UserInteractive -and -not $NonInteractive) {
+        # We are in an interactive shell.
+        return $false
+    }
+
+    return $true
+}
+
 function Get-Script-Location
 {
     # Script invocation directory: directory in which script resides, not necessarily current directory
@@ -62,5 +77,13 @@ if (-not (Test-Path -Path $TestScriptNamePath -Type Leaf)) {
 
 if (-not (Test-Path -Path $SourceFileNamePath -Type Leaf)) {
     throw [System.IO.FileNotFoundException] "Error: Missing source file - $SourceFileNamePath"
+}
+
+# Need to capture return code of test suite run for return to caller
+Set-Variable -Name RC -Value 1 -Option Private
+
+# Return code only needed in a non-interactive shell
+if (IsNonInteractiveShell) {
+    [Environment]::Exit($RC)
 }
 
