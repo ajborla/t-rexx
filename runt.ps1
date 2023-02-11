@@ -98,6 +98,11 @@ if ($TAPOutput) {
 # Need to capture return code of test suite run for return to caller
 Set-Variable -Name RC -Value $LastExitCode -Option Private
 
+# Unless KEEP option is set, delete the test runner
+if (-not $Keep) {
+    Remove-Item $RunnerFileNamePath
+}
+
 # Return code only needed in a non-interactive shell
 if (IsNonInteractiveShell) {
     [Environment]::Exit($RC)
