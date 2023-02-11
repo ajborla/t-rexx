@@ -88,8 +88,15 @@ Get-Content $T1RexxPath, $TestScriptNamePath,
             $T2RexxPath, $SourceFileNamePath,
             $T3RexxPath | Set-Content $RunnerFileNamePath
 
+# Execute test runner with output option
+if ($TAPOutput) {
+    rexx $RunnerFileNamePath "TAP"     # Emit TAP-compliant output
+} else {
+    rexx $RunnerFileNamePath           # else report format output
+}
+
 # Need to capture return code of test suite run for return to caller
-Set-Variable -Name RC -Value 1 -Option Private
+Set-Variable -Name RC -Value $LastExitCode -Option Private
 
 # Return code only needed in a non-interactive shell
 if (IsNonInteractiveShell) {
