@@ -70,6 +70,10 @@ Set-Variable -Name TargetLocation (Get-Location) -Option Private
 Set-Variable -Name TestScriptNamePath (-join ($TargetLocation, "\", $TestScriptName, ".rexx")) -Option Private
 Set-Variable -Name SourceFileNamePath (-join ($TargetLocation, "\", $SourceFileName, ".rexx")) -Option Private
 
+# Test runner name and path
+Set-Variable -Name Runner "t.rexx" -Option Private
+Set-Variable -Name RunnerFileNamePath (-join ($TargetLocation, "\", $Runner)) -Option Private
+
 # Ensure both test script and source file exist
 if (-not (Test-Path -Path $TestScriptNamePath -Type Leaf)) {
     throw [System.IO.FileNotFoundException] "Error: Missing test script - $TestScriptNamePath"
@@ -78,6 +82,11 @@ if (-not (Test-Path -Path $TestScriptNamePath -Type Leaf)) {
 if (-not (Test-Path -Path $SourceFileNamePath -Type Leaf)) {
     throw [System.IO.FileNotFoundException] "Error: Missing source file - $SourceFileNamePath"
 }
+
+# Assemble test runner from components and supplied files
+Get-Content $T1RexxPath, $TestScriptNamePath,
+            $T2RexxPath, $SourceFileNamePath,
+            $T3RexxPath | Set-Content $RunnerFileNamePath
 
 # Need to capture return code of test suite run for return to caller
 Set-Variable -Name RC -Value 1 -Option Private
