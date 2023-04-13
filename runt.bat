@@ -32,10 +32,12 @@
 :: 2023-02-10      0.3.2     Anthony J. Borla    Fix hard-coded test runner.
 :: 2023-02-10      0.4.0     Anthony J. Borla    Add KEEP and TAP options.
 :: 2023-02-10      0.4.1     Anthony J. Borla    Revise commentary and help.
+:: 2023-04-13      0.4.2     Anthony J. Borla    Added regina support.
 :: ----------------------------------------------------------------------------
 
 :init
   set RUNNER=t.rexx
+  set INTERPRETER=rexx
   set RC=1
 
 :chkusage
@@ -46,11 +48,14 @@
     if /i "%1"=="%%i" goto :help
   )
 
+set argc=0 & for %%x in (%*) do set /A argc+=1
+
 :chkoptions
-  if /i "%2"=="--keep" set KEEP=KEEP&& shift
-  if /i "%2"=="--tap-output" set TAP=TAP&& shift
-  if /i "%1"=="--keep" set KEEP=KEEP&& shift
-  if /i "%1"=="--tap-output" set TAP=TAP&& shift
+  if "%argc%"=="2" goto :chkarg
+  if /i "%1"=="--keep" set KEEP=KEEP&& shift && set /A argc+=-1
+  if /i "%1"=="--tap-output" set TAP=TAP&& shift && set /A argc+=-1
+  if /i "%1"=="--regina" set INTERPRETER=regina&& shift && set /A argc+=-1
+  goto :chkoptions
 
 :chkarg
   if "%2"=="" goto :argErr
@@ -68,7 +73,7 @@
   :: Execute test runner with output option
   :: - %TAP%==TAP -> TAP output
   :: - %TAP%==""  -> REPORT output
-  rexx %RUNNER% %TAP%
+  %INTERPRETER% %RUNNER% %TAP%
 
   :: Ensure test runner return code passed back to command-line
   set RC=%errorlevel%
@@ -84,6 +89,7 @@
   echo * %%1 is the test script name, %%2 is the source file (code under test), both sans .rexx extension
   echo * --tap-output option generates TAP-compliant output; default is verbose report style
   echo * --keep option ensures the generated test runner is not deleted
+  echo * --regina option activates the regina interpreter (for shared library support)
   echo * Return code zero on test run success; positive-valued return code equals number of failed tests
   echo * Expects 'rexx' interpreter to be available
   echo * Expects t-rexx component files, t1.rexx, t2.rexx, and t3.rexx, co-resident with test and source
@@ -102,7 +108,7 @@
 
 :usage
   echo.
-  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| [--keep] [--tap-output] test source
+  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| [--keep] [--tap-output] [--regina] test source
 
 :exit
   exit/b %RC%
