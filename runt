@@ -31,7 +31,8 @@
 # 2023-02-10      0.4.0     Anthony J. Borla    Activate KEEP functionality.
 # 2023-02-10      0.4.1     Anthony J. Borla    Revised commentary.
 # 2023-02-15      0.4.2     Anthony J. Borla    Altered shebang.
-# 2023-04-13      0.4.3     Anthony J. Borla    Added regina support.
+# 2023-04-13      0.5.0     Anthony J. Borla    Added regina support.
+# 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -42,13 +43,14 @@ INTERPRETER="rexx"
 # ---- Functions
 
 usage() {
-    echo "Usage: ${0} [-h | --help] | [--keep] [--tap-output] [--regina] test source"
+    echo "Usage: ${0} [-h | --help] | [--keep] [--tap|--json] [--regina] test source"
 }
 
 help() {
     echo 'Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.'
     echo ' * ${1} is the test script name, ${2} is the source file (code under test), both sans .rexx extension'
-    echo ' * --tap-output option generates TAP-compliant output; default is verbose report style'
+    echo ' * --tap option generates TAP-compliant output; default is verbose report style'
+    echo ' * --json option packages report style output as a JSON array (incompatible with --tap option)'
     echo ' * --keep option ensures the generated test runner is not deleted'
     echo ' * --regina option activates the regina interpreter (for shared library support)'
     echo ' * Return code zero on test run success; positive-valued return code equals number of failed tests'
@@ -72,11 +74,15 @@ error() {
 while (( "$#" )) ; do
     case "${1}" in
         --keep)       KEEP=KEEP ; shift ;;
-        --tap-output) TAP=TAP ; shift ;;
+        --tap)        TAP=TAP ; shift ;;
+        --json)       JSON=JSON ; shift ;;
         --regina)     INTERPRETER="regina" ; shift ;;
         *) break ;;
     esac
 done
+
+# Report options error if both --tap and --json options requested
+[ -n "${TAP}" -a -n "${JSON}" ] && error 'Incorrect option combination: either --tap or --json, not both'
 
 # Expecting two positional parameters; bail if not supplied
 [ "$#" -ne "2" ] && error 'Incorrect arguments'
@@ -88,10 +94,15 @@ done
 # Assemble test runner from components and supplied files
 cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null
 
+# Set output option
+[ -n "${TAP}" ] && OUT="${TAP}"
+[ -n "${JSON}" ] && OUT="${JSON}"
+
 # Execute test runner with output option
-# - "${TAP}"=="TAP" -> TAP output
-# - "${TAP}"==""    -> REPORT output
-"${INTERPRETER}" "${RUNNER}" "${TAP}"
+# - "${OUT}"=="JSON" -> JSON output
+# - "${OUT}"=="TAP"  -> TAP output
+# - "${OUT}"==""     -> REPORT output
+"${INTERPRETER}" "${RUNNER}" "${OUT}"
 
 # Ensure test runner return code passed back to command-line
 RC="$?"
