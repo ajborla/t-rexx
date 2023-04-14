@@ -34,6 +34,7 @@
 :: 2023-02-10      0.4.1     Anthony J. Borla    Revise commentary and help.
 :: 2023-04-13      0.5.0     Anthony J. Borla    Added regina support.
 :: 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
+:: 2023-04-15      0.6.1     Anthony J. Borla    Fix argument handling.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -42,9 +43,8 @@
   set RC=1
   set argc=0 & for %%x in (%*) do set /A argc+=1
 
-:chknoarg
+:chknoarg1
   if "%1"=="" goto :argErr
-  if "%2"=="" goto :argErr
 
 :chkusage
   :: Help requested ?
@@ -54,14 +54,14 @@
     if /i "%1"=="%%i" goto :help
   )
 
+:chknoarg2
+  if "%2"=="" goto :argErr
+
 :getopt
-  if "%argc%"=="2" goto :chkopt
-  if /i "%1"=="--keep" set KEEP=KEEP
-  if /i "%1"=="--tap" set TAP=TAP
-  if /i "%1"=="--json" set JSON=JSON
-  if /i "%1"=="--regina" set INTERPRETER=regina
-  shift & set /A argc+=-1
-  goto :getopt
+  if /i "%1"=="--keep" set KEEP=KEEP&& shift && set /A argc+=-1 && goto :getopt
+  if /i "%1"=="--tap" set TAP=TAP&& shift && set /A argc+=-1 && goto :getopt
+  if /i "%1"=="--json" set JSON=JSON&& shift && set /A argc+=-1 && goto :getopt
+  if /i "%1"=="--regina" set INTERPRETER=regina&& shift && set /A argc+=-1 && goto :getopt
 
 :chkopt
   :: Ensure mutual exclusivity
