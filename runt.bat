@@ -35,13 +35,13 @@
 :: 2023-04-13      0.5.0     Anthony J. Borla    Added regina support.
 :: 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
 :: 2023-04-15      0.6.1     Anthony J. Borla    Fix argument handling.
+:: 2023-04-15      0.6.2     Anthony J. Borla    Simplify argument handling.
 :: ----------------------------------------------------------------------------
 
 :init
   set RUNNER=t.rexx
   set INTERPRETER=rexx
   set RC=1
-  set argc=0 & for %%x in (%*) do set /A argc+=1
 
 :chknoarg1
   if "%1"=="" goto :argErr
@@ -58,10 +58,10 @@
   if "%2"=="" goto :argErr
 
 :getopt
-  if /i "%1"=="--keep" set KEEP=KEEP&& shift && set /A argc+=-1 && goto :getopt
-  if /i "%1"=="--tap" set TAP=TAP&& shift && set /A argc+=-1 && goto :getopt
-  if /i "%1"=="--json" set JSON=JSON&& shift && set /A argc+=-1 && goto :getopt
-  if /i "%1"=="--regina" set INTERPRETER=regina&& shift && set /A argc+=-1 && goto :getopt
+  if /i "%1"=="--keep" set KEEP=KEEP&& shift && goto :getopt
+  if /i "%1"=="--tap" set TAP=TAP&& shift && goto :getopt
+  if /i "%1"=="--json" set JSON=JSON&& shift && goto :getopt
+  if /i "%1"=="--regina" set INTERPRETER=regina&& shift && goto :getopt
 
 :chkopt
   :: Ensure mutual exclusivity
