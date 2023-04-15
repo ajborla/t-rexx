@@ -41,12 +41,13 @@ check:
 
   checkNumber = checkNumber + 1
 
+  returnedValue = ''
   if right(procedureCall,1) = ')' then
     interpret 'returnedValue = 'procedureCall
   else do
-    interpret 'call 'procedureCall
-    returnedValue = ''
+    if procedureCall \= '' then ; interpret 'call 'procedureCall
   end
+
   assertion = expect(returnedValue, variableName, operation, expectedValue)
 
   count = count + 1
@@ -62,6 +63,7 @@ return ''
 
 expect:
   parse arg actual, variableName, op, expected
+
   if variableName <> '' then
     actualValue = value(variableName)
   else do
