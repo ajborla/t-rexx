@@ -1,8 +1,20 @@
-/* rexx unit test framework
-   concatenate these files:
-   t1.rexx test-script t2.rexx rexx-file-to-test t3.rexx > t.rexx
-   then execute t.rexx
-   this file is t2.rexx
+/* Rexx unit test framework
+   1. Concatenate these files:
+
+         toplevel (Optional Rexx file containing shared variables)
+         t1.rexx
+         test-script
+         t2.rexx
+         rexx-file-to-test
+         t3.rexx
+
+      to create file:
+
+         t.rexx
+
+   2. Execute t.rexx
+
+   This file is t2.rexx
 */
 
 /* display the test results, either in TAP format, or REPORT format */

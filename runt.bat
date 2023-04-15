@@ -5,10 +5,15 @@
 ::
 :: %1 -> the test script (rexx)
 :: %2 -> the application to test (rexx)
+:: %3 -> optional shared variable definitions file (rexx)
 ::
 :: This script concatenates the files:
 ::
 ::   t1.rexx + %1.rexx + t2.rexx + %2.rexx + t3.rexx
+::
+:: or, if optional file specified:
+::
+::   %3.rexx + t1.rexx + %1.rexx + t2.rexx + %2.rexx + t3.rexx
 ::
 :: and executes the resulting test runner file. The return code from the
 :: test runner is passed back to the command-line. Valid return code values:
@@ -37,6 +42,7 @@
 :: 2023-04-15      0.6.1     Anthony J. Borla    Fix argument handling.
 :: 2023-04-15      0.6.2     Anthony J. Borla    Simplify argument handling.
 :: 2023-04-15      0.7.0     Anthony J. Borla    Added toplevel support.
+:: 2023-04-15      0.7.1     Anthony J. Borla    Revise header commentary.
 :: ----------------------------------------------------------------------------
 
 :init
