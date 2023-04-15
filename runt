@@ -33,6 +33,7 @@
 # 2023-02-15      0.4.2     Anthony J. Borla    Altered shebang.
 # 2023-04-13      0.5.0     Anthony J. Borla    Added regina support.
 # 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
+# 2023-04-15      0.7.0     Anthony J. Borla    Added toplevel support.
 # -----------------------------------------------------------------------------
 
 # ---- Constants
@@ -43,12 +44,13 @@ INTERPRETER="rexx"
 # ---- Functions
 
 usage() {
-    echo "Usage: ${0} [-h | --help] | [--keep] [--tap|--json] [--regina] test source"
+    echo "Usage: ${0} [-h | --help] | [--keep] [--tap|--json] [--regina] test source [toplevel]"
 }
 
 help() {
     echo 'Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.'
     echo ' * ${1} is the test script name, ${2} is the source file (code under test), both sans .rexx extension'
+    echo ' * ${3} is an optional Rexx file containing variables shared by the code under test (sans .rexx extension)'
     echo ' * --tap option generates TAP-compliant output; default is verbose report style'
     echo ' * --json option packages report style output as a JSON array (incompatible with --tap option)'
     echo ' * --keep option ensures the generated test runner is not deleted'
@@ -84,15 +86,18 @@ done
 # Report options error if both --tap and --json options requested
 [ -n "${TAP}" -a -n "${JSON}" ] && error 'Incorrect option combination: either --tap or --json, not both'
 
-# Expecting two positional parameters; bail if not supplied
-[ "$#" -ne "2" ] && error 'Incorrect arguments'
+# Expecting two, or three, positional parameters; bail if not supplied
+[ "$#" -ne "2" -a "$#" -ne "3" ] && error 'Incorrect arguments'
 
 # Expecting each positional parameter to be a Rexx filename
 [ -f "${1}.rexx" ] || error "Missing test script - ${1}.rexx"
 [ -f "${2}.rexx" ] || error "Missing source file - ${2}.rexx"
+[ "$#" -eq "3" ] && { [ -f "${3}.rexx" ] || error "Missing toplevel file - ${3}.rexx" ; }
 
 # Assemble test runner from components and supplied files
-cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null
+[ "$#" -eq "3" ] \
+    && cat "${3}.rexx" t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null \
+    || cat t1.rexx "${1}.rexx" t2.rexx "${2}.rexx" t3.rexx > "${RUNNER}" 2>/dev/null
 
 # Set output option
 [ -n "${TAP}" ] && OUT="${TAP}"
