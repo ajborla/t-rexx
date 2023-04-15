@@ -36,6 +36,7 @@
 :: 2023-04-14      0.6.0     Anthony J. Borla    Added JSON option.
 :: 2023-04-15      0.6.1     Anthony J. Borla    Fix argument handling.
 :: 2023-04-15      0.6.2     Anthony J. Borla    Simplify argument handling.
+:: 2023-04-15      0.7.0     Anthony J. Borla    Added toplevel support.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -73,12 +74,14 @@
 
 :chkfile
   :: Do source and test script files exist ?
+  if not "%3"=="" if not exist "%3.rexx" goto :noToplevelFileErr
   if not exist "%2.rexx" goto :noSourceFileErr
   if not exist "%1.rexx" goto :noTestFileErr
 
 :main
   :: Assemble test runner from components and supplied files
-  copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
+  if not "%3"=="" copy/v "%3.rexx"+t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
+  if "%3"=="" copy/v t1.rexx+"%1.rexx"+t2.rexx+"%2.rexx"+t3.rexx %RUNNER% > NUL:
 
   :: Set output option
   if "%TAP%"=="TAP" set OUT=%TAP%
@@ -102,6 +105,7 @@
   echo.
   echo Executes t-rexx unit test runner using supplied Rexx test script on specified Rexx source file.
   echo * %%1 is the test script name, %%2 is the source file (code under test), both sans .rexx extension
+  echo * %%3 is an optional Rexx file containing variables shared by the code under test (sans .rexx extension)
   echo * --tap option generates TAP-compliant output; default is verbose report style
   echo * --json option packages report style output as a JSON array (incompatible with --tap option)
   echo * --keep option ensures the generated test runner is not deleted
@@ -119,6 +123,10 @@
   echo Error: Incorrect option combination - either --tap or --json, not both
   goto :usage
 
+:noToplevelFileErr
+  echo Error: Missing toplevel file - "%3.rexx"
+  goto :usage
+
 :noSourceFileErr
   echo Error: Missing source file - "%2.rexx"
   goto :usage
@@ -128,7 +136,7 @@
 
 :usage
   echo.
-  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| [--keep] [--tap^|--json] [--regina] test source
+  echo Usage: %0 [-h ^| -? ^| --help ^| /h ^| /? ^| /help] ^| [--keep] [--tap^|--json] [--regina] test source [toplevel]
 
 :exit
   exit/b %RC%
