@@ -31,7 +31,7 @@ init:
   spacer = ' '
 return
 
-context:
+context : procedure expose contextdesc
   parse arg desc
   contextdesc = desc
 return ''
@@ -97,7 +97,7 @@ expect:
   end
 return
 
-report:
+report : procedure expose passed failed outputType
   parse arg actual, op, expected, res
   lineout = ''
   select
@@ -120,7 +120,7 @@ report:
   end
 return lineout
 
-counts:
+counts : procedure expose text. count passed failed
   text.0 = 3
   text.1 = right(count,2) ' checks were executed'
   text.2 = right(passed,2) ' checks passed'
