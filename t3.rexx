@@ -20,7 +20,7 @@
 /* functions for the test framework */
 
 init:
-  parse upper arg tapOutput
+  parse upper arg outputType
   checkNumber = 0
   count = 0
   passed = 0
@@ -53,7 +53,7 @@ check:
   count = count + 1
   checkresult.0 = count
 
-  if tapOutput == 'TAP' then
+  if outputType == 'TAP' then
     checkresult.count = assertion count '-' description
   else do
     checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
@@ -103,7 +103,7 @@ report:
   select
     when res == 0 then do
       failed = failed + 1
-      if tapOutput == 'TAP' then
+      if outputType == 'TAP' then
         lineout = 'not ok'
       else do
         lineout = '*** FAILED: Expected "' || expected || '" but got "' || actual || '"'
@@ -111,7 +111,7 @@ report:
     end
     when res == 1 then do
       passed = passed + 1
-      if tapOutput == 'TAP' then
+      if outputType == 'TAP' then
         lineout = 'ok'
       else do
         lineout = '    PASSED: Expected "' || expected || '" and got "' || actual || '"'

@@ -19,7 +19,7 @@
 
 /* display the test results, either in TAP format, or REPORT format */
 
-if tapOutput == 'TAP' then do
+if outputType == 'TAP' then do
   say '1..'||count
 
   do i = 1 to checkresult.0
