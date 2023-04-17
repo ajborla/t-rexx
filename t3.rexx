@@ -47,11 +47,13 @@ check:
     say 'Must include procedureCall' ; exit 1
   end
 
+  /* Only invoke procedure if no variable name supplied */
   returnedValue = ''
-  if right(procedureCall,1) = ')' then
-    interpret 'returnedValue = 'procedureCall
-  else do
-    if procedureCall \= '' then ; interpret 'call 'procedureCall
+  if variableName == '' then do
+    if right(procedureCall,1) = ')' then
+      interpret 'returnedValue = 'procedureCall
+    else
+      interpret 'call 'procedureCall
   end
 
   assertion = expect(returnedValue, variableName, operation, expectedValue)
