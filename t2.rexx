@@ -17,31 +17,46 @@
    This file is t2.rexx
 */
 
-/* display the test results, either in TAP format, or REPORT format */
+/* display the test results, either in TAP, JSON, or REPORT format */
 
-if outputType == 'TAP' then do
-  say '1..'||count
-
-  do i = 1 to checkresult.0
-    say checkresult.i
+select
+  when outputType == 'TAP' then do
+    say '1..'||count
+    do i = 1 to checkresult.0
+      say checkresult.i
+    end
   end
-end ; else do
-  say divider
-  say contextdesc
-  say spacer
-
-  do i = 1 to checkresult.0
-    say checkresult.i
+  when outputType == 'JSON' then do
+    idx = 3 ; failed = counts().idx
+    status = 'pass' ; if failed > 0 then ; status = 'fail'
+    outtests = '' ; do i = 1 to checkresult.0
+      outtests ||= checkresult.i || ',' || EOL
+    end
+    outtests = SUBSTR(outtests, 1, LENGTH(outtests) - 2)
+    json = ,
+      '{' || EOL || ,
+      '  "version": 3,' || EOL || ,
+      '  "status": "' || status || '",' || EOL || ,
+      '  "message": null,' || EOL || ,
+      '  "tests": [' || EOL || ,
+      outtests || EOL || ,
+      '  ]' || EOL || ,
+      '}'
+    say json
   end
-
-  say spacer
-
-  text = counts()
-  do i = 1 to text.0
-    say text.i
-  end
-
-  say divider
+  otherwise
+    say divider
+    say contextdesc
+    say spacer
+    do i = 1 to checkresult.0
+      say checkresult.i
+    end
+    say spacer
+    text = counts()
+    do i = 1 to text.0
+      say text.i
+    end
+    say divider
 end
 
 exit (count - passed)

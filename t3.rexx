@@ -29,6 +29,7 @@ init:
   checkresult. = ''
   divider = '----------------------------------------'
   spacer = ' '
+  EOL = "0A"X
 return
 
 context : procedure expose contextdesc
@@ -53,10 +54,33 @@ check:
   count = count + 1
   checkresult.0 = count
 
-  if outputType == 'TAP' then
-    checkresult.count = assertion count '-' description
-  else do
-    checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
+  select
+    when outputType == 'TAP' then do
+      checkresult.count = assertion count '-' description
+    end
+    when outputType == 'JSON' then do
+      parse value STRIP(assertion) with testResult ':' .
+      /* Ensure conforming field values */
+      testStatus = 'pass' ; if testResult \= 'PASSED' then ; testStatus = 'fail'
+      conjunction = 'and' ; if testStatus \= 'pass' then ; conjunction = 'but'
+      if expectedValue == '' then ; expectedValue = "''"
+      if returnedValue == '' then ; returnedValue = "''"
+      /* Remove procedure name from description if it exists there */
+      delidx = POS(procedureCall, description)
+      if delidx > 0 then ; description = STRIP(DELSTR(description, delidx))
+      /* Package test results as JSON */
+      checkresult.count = ,
+        MakeJSONTestResult( ,
+          description,,
+          testStatus,,
+          'Expected' expectedValue conjunction 'got' returnedValue,,
+          '',,
+          procedureCall op expectedValue,,
+          1,,
+          EOL)
+    end
+    otherwise
+      checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
   end
 
 return ''
@@ -126,3 +150,17 @@ counts : procedure expose text. count passed failed
   text.2 = right(passed,2) ' checks passed'
   text.3 = right(failed,2) ' checks failed'
 return text
+
+MakeJSONTestResult : procedure
+  parse arg name, status, message, output, test_code, task_id, eol
+  json = ,
+    '    {' || eol || ,
+    '      "name": "' || name || '",' || eol || ,
+    '      "status": "' || status || '",' || eol || ,
+    '      "message": "' || message || '",' || eol || ,
+    '      "output": "' || output || '",' || eol || ,
+    '      "test_code": "' || test_code || '",' || eol || ,
+    '      "task_id":' task_id || eol || ,
+    '    }'
+return json
+
