@@ -42,6 +42,11 @@ check:
 
   checkNumber = checkNumber + 1
 
+  /* Ensure procedureCall *is* supplied */
+  if procedureCall == '' then do
+    say 'Must include procedureCall' ; exit 1
+  end
+
   returnedValue = ''
   if right(procedureCall,1) = ')' then
     interpret 'returnedValue = 'procedureCall
