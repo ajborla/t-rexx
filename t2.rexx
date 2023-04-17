@@ -27,7 +27,7 @@ select
     end
   end
   when outputType == 'JSON' then do
-    idx = 3 ; failed = counts().idx
+    text = counts() ; idx = 3 ; failed = WORD(SPACE(text.idx), 1)
     status = 'pass' ; if failed > 0 then ; status = 'fail'
     outtests = '' ; do i = 1 to checkresult.0
       outtests ||= checkresult.i || ',' || EOL
