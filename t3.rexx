@@ -121,7 +121,7 @@ expect:
       say '  less than (<) and'
       say '  less than or equal to (<=)'
       say '.......exiting'
-      exit
+      exit 1
     end
   end
 return
