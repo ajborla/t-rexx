@@ -50,7 +50,7 @@ check:
   /* Only invoke procedure if no variable name supplied */
   returnedValue = ''
   if variableName == '' then do
-    if right(procedureCall,1) = ')' then
+    if RIGHT(procedureCall, 1) = ')' then
       interpret 'returnedValue = 'procedureCall
     else
       interpret 'call 'procedureCall
@@ -87,7 +87,7 @@ check:
           EOL)
     end
     otherwise
-      checkresult.count = right(count,2) || '. ' || assertion || ' - Test: ' || description
+      checkresult.count = RIGHT(count, 2) || '. ' || assertion || ' - Test: ' || description
   end
 
 return ''
@@ -96,7 +96,7 @@ expect:
   parse arg actual, variableName, op, expected
 
   if variableName <> '' then
-    actualValue = value(variableName)
+    actualValue = VALUE(variableName)
   else do
     actualValue = actual
   end
@@ -153,9 +153,9 @@ return lineout
 
 counts : procedure expose text. count passed failed
   text.0 = 3
-  text.1 = right(count,2) ' checks were executed'
-  text.2 = right(passed,2) ' checks passed'
-  text.3 = right(failed,2) ' checks failed'
+  text.1 = RIGHT(count, 2) ' checks were executed'
+  text.2 = RIGHT(passed, 2) ' checks passed'
+  text.3 = RIGHT(failed, 2) ' checks failed'
 return text
 
 MakeJSONTestResult : procedure
