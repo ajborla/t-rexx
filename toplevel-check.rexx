@@ -28,19 +28,19 @@ check('Table has 1 entry - return value' function||'(100)',,
       function||'(100)',, 'to be', 1)
 
 check('Table has 1 entry - direct stem access' function||'(100)',,
-      , 'table.0', 'to be', 1)
+      function||'(100)', 'table.0', 'to be', 1)
 
 check('Table Entry 1 value - direct stem access' function||'(100)',,
-      , 'table.1', 'to be', 100 + 1)
+      function||'(100)', 'table.1', 'to be', 100 + 1)
 
 /* Add a further 5 entries to the shared table */
 do 5 ; call UpdateTable 100 ; end
 
 check('Table has 6 entries - direct stem access' function||'(100)',,
-      , 'table.0', 'to be', 6)
+      function||'(100)', 'table.0', 'to be', 6)
 
 check('Table Entry 6 value - direct stem access' function||'(100)',,
-      , 'table.6', 'to be', 100 + 6)
+      function||'(100)', 'table.6', 'to be', 100 + 6)
 
 expval = ,
   'table entries: 6' || "0A"X || ,
@@ -53,6 +53,7 @@ expval = ,
 
 retval = PrintTable()
 
+function = 'PrintTable'
 check('PrintTable output' 'table entries: 6 ...',,
-      , 'retval', 'to be', expval)
+      function||'()', 'retval', 'to be', expval)
 
