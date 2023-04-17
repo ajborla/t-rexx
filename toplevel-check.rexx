@@ -42,13 +42,15 @@ check('Table has 6 entries - direct stem access' function||'(100)',,
 check('Table Entry 6 value - direct stem access' function||'(100)',,
       function||'(100)', 'table.6', 'to be', 100 + 6)
 
+newline = "0A"X
+
 expval = ,
-  'table entries: 6' || "0A"X || ,
-  'idx 1 -> 101' || "0A"X || ,
-  'idx 2 -> 102' || "0A"X || ,
-  'idx 3 -> 103' || "0A"X || ,
-  'idx 4 -> 104' || "0A"X || ,
-  'idx 5 -> 105' || "0A"X || ,
+  'table entries: 6' || newline || ,
+  'idx 1 -> 101' || newline || ,
+  'idx 2 -> 102' || newline || ,
+  'idx 3 -> 103' || newline || ,
+  'idx 4 -> 104' || newline || ,
+  'idx 5 -> 105' || newline || ,
   'idx 6 -> 106'
 
 retval = PrintTable()
