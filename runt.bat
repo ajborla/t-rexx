@@ -43,6 +43,7 @@
 :: 2023-04-15      0.6.2     Anthony J. Borla    Simplify argument handling.
 :: 2023-04-15      0.7.0     Anthony J. Borla    Added toplevel support.
 :: 2023-04-15      0.7.1     Anthony J. Borla    Revise header commentary.
+:: 2023-04-19      0.7.2     Anthony J. Borla    Fix JSON option.
 :: ----------------------------------------------------------------------------
 
 :init
@@ -94,10 +95,10 @@
   if "%JSON%"=="JSON" set OUT=%JSON%
 
   :: Execute test runner with output option
-  :: - "${OUT}"=="JSON" -> JSON output
-  :: - "${OUT}"=="TAP"  -> TAP output
-  :: - "${OUT}"==""     -> REPORT output
-  %INTERPRETER% %RUNNER% %TAP%
+  :: - "%OUT%"=="JSON" -> JSON output
+  :: - "%OUT%"=="TAP"  -> TAP output
+  :: - "%OUT%"==""     -> REPORT output
+  %INTERPRETER% %RUNNER% %OUT%
 
   :: Ensure test runner return code passed back to command-line
   set RC=%errorlevel%
