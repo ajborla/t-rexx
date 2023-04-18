@@ -26,15 +26,17 @@ init:
   passed = 0
   failed = 0
   contextdesc = ''
+  TASK_ID = 1
   checkresult. = ''
   divider = '----------------------------------------'
   spacer = ' '
   EOL = "0A"X
 return
 
-context : procedure expose contextdesc
-  parse arg desc
+context : procedure expose contextdesc TASK_ID
+  parse arg desc, task_identifier
   contextdesc = desc
+  if task_identifier \= '' then ; TASK_ID = task_identifier
 return ''
 
 check:
@@ -83,7 +85,7 @@ check:
           'Expected' expectedValue conjunction 'got' returnedValue,,
           '',,
           procedureCall op expectedValue,,
-          1,,
+          TASK_ID,,
           EOL)
     end
     otherwise
