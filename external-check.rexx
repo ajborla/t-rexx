@@ -12,13 +12,13 @@ numeric digits 9
 
 /* Unit tests of functions calling external library functions */
 function = 'CallPiFunc'
-check('Calling external function -' function||'()',,
-      function||'()',, '=', 3.141592654)
+check('Calling external function -' function'()',,
+      function'()',, '=', 3.141592654)
 
 function = 'CallSqrtFunc'
-check('Calling external function -' function||'(25)',,
-      function||'(25)',, '=', 5.000000000)
+check('Calling external function -' function'(25)',,
+      function'(25)',, '=', 5.000000000)
 
-check('Calling external function -' function||'(2)',,
-      function||'(2)',, '=', 1.414213562)
+check('Calling external function -' function'(2)',,
+      function'(2)',, '=', 1.414213562)
 
