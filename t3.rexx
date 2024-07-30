@@ -71,8 +71,8 @@ check:
       /* Ensure conforming field values */
       testStatus = 'pass' ; if testResult \= 'PASSED' then ; testStatus = 'fail'
       conjunction = 'and' ; if testStatus \= 'pass' then ; conjunction = 'but'
-      if expectedValue == '' then ; expectedValue = "''"
-      if returnedValue == '' then ; returnedValue = "''"
+      if STRIP(expectedValue) = '' then ; expectedValue = "''"
+      if STRIP(returnedValue) = '' then ; returnedValue = "''"
       /* Remove procedure name from description if it exists there */
       delidx = POS(procedureCall, description)
       if delidx > 0 then ; description = STRIP(DELSTR(description, delidx))
