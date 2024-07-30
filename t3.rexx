@@ -42,7 +42,6 @@ return ''
 
 check:
   parse arg description, procedureCall, variableName, operation, expectedValue
-
   checkNumber = checkNumber + 1
 
   /* Ensure procedureCall *is* supplied */
@@ -55,8 +54,7 @@ check:
   if variableName == '' then do
     if RIGHT(procedureCall, 1) = ')' then
       interpret 'returnedValue = 'procedureCall
-    else
-      interpret 'call 'procedureCall
+    else do ; interpret 'call 'procedureCall  ; returnedValue = RESULT ; end
   end
 
   assertion = expect(returnedValue, variableName, operation, expectedValue)
