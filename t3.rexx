@@ -76,6 +76,11 @@ check:
       /* Remove procedure name from description if it exists there */
       delidx = POS(procedureCall, description)
       if delidx > 0 then ; description = STRIP(DELSTR(description, delidx))
+      /* Quote code parameters if non-numeric */
+      if DATATYPE(expectedValue, 'N') then
+        testCode = procedureCall op expectedValue
+      else
+        testCode = procedureCall op "'"expectedValue"'"
       /* Package test results as JSON */
       checkresult.count = ,
         MakeJSONTestResult( ,
@@ -83,7 +88,7 @@ check:
           testStatus,,
           'Expected' expectedValue conjunction 'got' returnedValue,,
           '',,
-          procedureCall op expectedValue,,
+          testCode,,
           TASK_ID,,
           EOL)
     end
